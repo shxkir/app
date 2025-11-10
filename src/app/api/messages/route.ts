@@ -33,6 +33,16 @@ export async function GET(request: Request) {
       ],
     },
     orderBy: { createdAt: "asc" },
+    include: {
+      sender: {
+        select: {
+          id: true,
+          username: true,
+          displayName: true,
+          profileImage: true,
+        },
+      },
+    },
   });
 
   return NextResponse.json({
@@ -43,6 +53,9 @@ export async function GET(request: Request) {
       content: message.content,
       createdAt: message.createdAt,
       isMine: message.senderId === user.id,
+      senderProfileImage: message.sender.profileImage,
+      senderDisplayName: message.sender.displayName,
+      senderUsername: message.sender.username,
     })),
   });
 }
@@ -73,6 +86,16 @@ export async function POST(request: Request) {
         receiverId,
         content,
       },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            username: true,
+            displayName: true,
+            profileImage: true,
+          },
+        },
+      },
     });
 
     return NextResponse.json({
@@ -83,6 +106,9 @@ export async function POST(request: Request) {
         content: message.content,
         createdAt: message.createdAt,
         isMine: true,
+        senderProfileImage: message.sender.profileImage,
+        senderDisplayName: message.sender.displayName,
+        senderUsername: message.sender.username,
       },
     });
   } catch (error) {

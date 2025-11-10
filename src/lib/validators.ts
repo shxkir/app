@@ -24,7 +24,7 @@ export const loginSchema = z.object({
 });
 
 export const followSchema = z.object({
-  userId: z.string().cuid(),
+  userId: z.string(),
 });
 
 export const messageSchema = z.object({

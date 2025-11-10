@@ -10,10 +10,8 @@ export function LogoutButton() {
   const handleLogout = async () => {
     setIsPending(true);
     try {
-      await fetch("/api/auth/logout", {
-        method: "POST",
-      });
-      router.push("/");
+      await fetch("/api/auth/logout", { method: "POST" });
+      router.push("/auth/login");
       router.refresh();
     } catch (error) {
       console.error("logout failed", error);
@@ -26,7 +24,7 @@ export function LogoutButton() {
     <button
       onClick={handleLogout}
       disabled={isPending}
-      className="rounded-full border border-rose-200/60 px-3 py-1 text-rose-100 transition hover:bg-rose-500/10 disabled:opacity-60"
+      className="inline-flex items-center rounded-full border border-white/40 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white transition hover:opacity-80 hover:underline disabled:opacity-60"
     >
       {isPending ? "..." : "Logout"}
     </button>

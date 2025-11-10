@@ -15,23 +15,16 @@ async function main() {
 
   const passwordHash = await bcrypt.hash(password, 12);
 
-  const existing = await prisma.user.findUnique({ where: { email } });
-
-  if (existing) {
-    if (existing.role !== Role.ADMIN) {
-      await prisma.user.update({
-        where: { id: existing.id },
-        data: { role: Role.ADMIN, isVerified: true },
-      });
-      console.log("Updated existing admin user permissions.");
-    } else {
-      console.log("Admin user already exists. Nothing to do.");
-    }
-    return;
-  }
-
-  await prisma.user.create({
-    data: {
+  const admin = await prisma.user.upsert({
+    where: { email },
+    update: {
+      username,
+      passwordHash,
+      role: Role.ADMIN,
+      isVerified: true,
+      bio: "Runs the platform and keeps the vibes healthy.",
+    },
+    create: {
       email,
       username,
       displayName: "Platform Admin",
@@ -42,7 +35,31 @@ async function main() {
     },
   });
 
-  console.log(`Created admin user (${email}).`);
+  const postCount = await prisma.post.count();
+  if (postCount === 0) {
+    await prisma.post.createMany({
+      data: [
+        {
+          authorId: admin.id,
+          imageUrl: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=900&q=80",
+          caption: "Sunset meetup with the squad 🌅",
+        },
+        {
+          authorId: admin.id,
+          imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80",
+          caption: "Coffee chats + product ideas ☕️",
+        },
+        {
+          authorId: admin.id,
+          imageUrl: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
+          caption: "Weekend city strolls hit different 🏙️",
+        },
+      ],
+    });
+    console.log("Seeded starter photo posts.");
+  }
+
+  console.log(`Admin ready at ${email}.`);
 }
 
 main()

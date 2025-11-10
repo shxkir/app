@@ -5,6 +5,7 @@ Pulse is a playful mini social network built with Next.js 16 + Prisma + PostgreS
 ### Features
 
 - **Instant onboarding** – Sign-up flow stores hashed credentials so new members can log in right away.
+- **Photo feed** – Users can share image posts (see Prisma `Post` model) via the built-in upload form; files are saved to `public/uploads`.
 - **Follow graph + DMs** – Follow/unfollow people, see suggestions, and exchange private messages with anyone in your orbit.
 - **Admin control center** – A seeded admin account can promote/demote/delete users with cascading cleanup of sessions, follows, and messages.
 - **Gen-Z chatbot** – `/api/chatbot` returns slangy responses that power the conversational widget on the home page.
@@ -60,9 +61,10 @@ Pulse is a playful mini social network built with Next.js 16 + Prisma + PostgreS
 2. **Sessions**  
    `POST /api/auth/login` issues an httpOnly cookie backed by a Prisma `Session` record. `GET /api/auth/me` returns the safe user payload for client hydration. `POST /api/auth/logout` clears the cookie.
 
-3. **Follow + messaging**  
+3. **Follow + messaging + feed**  
    `GET/POST /api/follow` manages suggestions and follow/unfollow toggles.  
-   `GET/POST /api/messages` fetches/sends DMs between members.
+   `GET/POST /api/messages` fetches/sends DMs between members.  
+   `GET/POST /api/posts` powers the Instagram-style feed (image uploads land in `public/uploads`).
 
 4. **Admin panel**  
    `GET/POST /api/admin/users` powers the admin table. The seeded admin account (or any promoted user) can change roles or delete members.

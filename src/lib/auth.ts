@@ -14,6 +14,7 @@ export type SafeUser = {
   id: string;
   email: string;
   username: string;
+  profileImage: string | null;
   displayName: string | null;
   bio: string | null;
   role: Role;
@@ -25,6 +26,7 @@ export const toSafeUser = (user: User): SafeUser => ({
   id: user.id,
   email: user.email,
   username: user.username,
+  profileImage: user.profileImage,
   displayName: user.displayName,
   bio: user.bio,
   role: user.role,
